@@ -67,7 +67,7 @@
             </section>
 
             <section>
-              <section id="fragments_page">
+              <section id="fragments_page1">
                 <p>Examples: </p>
                 <ul>
                   <li class="fragment">Yelp displays nearby restaurants on a Google Map in its app  </li>
@@ -78,11 +78,32 @@
 
             <section>
               <h2>Part 2: How to interact with Twitter API?</h2>
-              <h3>Part 2.1: Setting up API keys</h3>
             </section> 
 
             <section>
-              <p> We need keys to get Twitter data through <a href="https://apps.twitter.com/">Twitter API.</a> You need: <em>API Key, API Secret, Access token, Access token secret</em>. First, go to <a href="https://apps.twitter.com/"><code>https://apps.twitter.com/</code></a>, and sign in with your Twitter account. Go to my applications page to create an application.</p>
+              <p>
+                There are multiple ways to interact with Twitter API - you can search for specific tweets in some location, get realtime stream data, look for tweets of particular users, etc. In this workshop, we will be demonstrating <strong>how to get tweets based on a list of twitter handles.</strong> 
+              </p>
+            </section>
+
+            <section>
+              <section id="fragments_page2">
+                <p>High level outline of how we will proceed: </p>
+                <ul>
+                  <li class="fragment">Create a list of Twitter users we want to get tweets for  (as a <code>.csv</code> file)</li>
+                  <li class="fragment"> Import the <code>.csv</code> file as a table in sqlite database</li>
+                  <li class="fragment"> Use the database table to <strong>request</strong> data from Twitter</li>
+                  <li class="fragment"> Save <strong>response</strong> from Twitter as another table in sqlite database </li>
+                </ul>
+              </section>
+            </section>
+
+            <section>
+              <h2>Part 2.1: Setting up API keys</h2>
+            </section>
+
+            <section>
+              <p> The first step is to make sure we have a "proper access" to the data on <a href="https://apps.twitter.com/">Twitter. </a> "Proper access" means that you need: <em>API Key, API Secret, Access token, Access token secret</em>. First, go to <a href="https://apps.twitter.com/"><code>https://apps.twitter.com/</code></a>, and sign in with your Twitter account. Go to my applications page to create an application.</p>
               <img src="img/twitter_app_sign.png" alt="">
             </section>
 
@@ -98,13 +119,8 @@
             </section>
 
             <section>
-              <p>Determine which part of the Twitter API you’ll need to access  — there are different API methods for accessing information on tweets, retweets, users, following relationships, etc. 
-              </p>
-            </section>
-
-            <section>
               <p>
-                You can look at <a href="https://dev.twitter.com/overview/api/users">definitions for the variables returned from API</a> later, below is a list of some important output variables for today's workshop.
+                The next step is to determine which fields per each user we would like to get data on. You can look at <a href="https://dev.twitter.com/overview/api/users">definitions for the variables returned from API</a> later, below is a list of some fields we would like to use in today's workshop.
               </p>
               <img src="img/def_vars_twitter1.png">
             </section>
@@ -114,12 +130,14 @@
             </section>
 
             <section>
-              <img src="img/def_vars_twitter3.png">
+              <h3>Part 2.2: Prepare a Twitter handle list</h3>
+              <img src="img/twitter_handle_list.png">
             </section>
 
             <section>
-              <h3>Part 2.2: Prepare a Twitter handle list</h3>
-              <img src="img/twitter_handle_list.png">
+              <p>
+                Create a CSV file that has 3 columns: id, twitter handle, and an extra column of all 1s(you may leave it blank). Save the file in some folder that makes sense to you. As we create more files, save them in this location as well.
+              </p>
             </section>
 
             <section>
@@ -128,7 +146,6 @@
                 <ul>
                   <li>Simplejson (<code>https://pypi.python.org/pypi/simplejson</code>)</li>
                   <li>Twython (<code>https://twython.readthedocs.org/en/latest/index.html</code>)</li>
-                  <li>Sqlite3 (<code>http://sqlite.org/</code>)</li>
                   <li>Sqlalchemy (<code>http://www.sqlalchemy.org/</code>)</li>
                 </ul> 
               </p>
@@ -142,14 +159,14 @@
 
             <section>
               <h3>Installing necessary external Python libraries</h3>
-              <p><strong>On a Mac or Linux</strong>, open the Terminal and type <code>pip install Twython</code> and <code>pip install simplejson</code>.
+              <p><strong>On a Mac or Linux</strong>, open the Terminal and type <code>pip install twython</code>, <code>pip install simplejson</code>, and <code>pip install sqlalchemy</code>.
               </p>
-              <p><strong>On Windows</strong>, open CMD, type in the command line <code>pip install Twython</code>.
+              <p><strong>On Windows</strong>, open CMD, type in the command line <code>pip install twython</code> and other packages as above.
               </p>
             </section>
 
             <section>
-              <h2>Part 2.4: Create a SQLite database</h2>
+              <h3>Part 2.4: Create a SQLite database</h3>
               <p>Go to <code>http://sqlitebrowser.org/</code> and download SQLite Database Browser. It allows you to view and edit SQLite databases.
               </p>
               <img src="img/sqlite_browser.png">
@@ -159,7 +176,7 @@
               <p>Go to <strong>File-New Database</strong> to create a new database. </p>
               <p> Remember the database filename you enter.</p>
               <p>
-                The default file extension is <code>.sqlite</code>, to prevent future complications, add the extension <strong><code>.sqlite</code></strong> when typing filename.
+                Add the extension <strong><code>.sqlite</code></strong> when typing filename. (you can also use extension <strong><code>.db</code></strong>)
               </p>
             </section>
 
@@ -175,9 +192,9 @@
             </section>
 
             <section>
-              <h2>Part 2.5: Modify the script and Run</h2>
-              <p><a href="tweets_by_user_mod.py">Download the code</a></p>
-              <p>Find this block of code, and enter your API Keys.</p>
+              <h3>Part 2.5: Modify the script and Run</h3>
+              <p><a href="http://web.mit.edu/aizhan/www/twitter_api_workshop/docs/tweets_by_user.py">Download the script</a> and save it as <code>.py</code> file in the same folder where you saved CSV file and the database file. There are just 3 edits you need to make: provide API keys, give correct filepath to database, and provide the name of the table where the data from Twitter will be saved. </p>
+              <p>Within the script, find this block of code, and enter your API Keys.</p>
               <img src="img/script1_modify.png">
             </section>
 
@@ -187,7 +204,7 @@
             </section>
 
             <section>
-              <p>You can refine search criteria:</p>
+              <p>You may also refine search criteria:</p>
               <img src="img/script3_modify.png">
               <p> <code>count</code> specifies the number of tweets to try and retrieve for each Twitter handle. The maximum value is 200. </p>
               <p> Read more <a href="https://dev.twitter.com/rest/reference/get/statuses/user_timeline">here</a></p>
@@ -206,6 +223,20 @@
             <section>
               <h2>Load the SQLite data into Excel</h2>
               <img src="img/load_toexcel.png">
+            </section>
+
+            <section>
+            <section id="fragments_page3">
+              <h3>Important concepts I'd like you to get out of this workshop</h3>
+                <ul>
+                  <li class="fragment"> What is an API </li>
+                  <li class="fragment"> Basic building blocks of Twitter API (oauth, keys, tokens, request, response)</li>
+                  <li class="fragment"> What is database and why is it useful. What is a query</li>
+                  <li class="fragment"> How to navigate through file system of your computer using command line (<code>ls, cd, pwd </code>)</li>
+                  <li class="fragment"> How import statements are structured in a Python script </li>
+                  <li class="fragment"> What is a notion of <code>Class</code> </li>
+                </ul>
+              </section>
             </section>
 
       </div>

@@ -1,22 +1,26 @@
 """
-This version is based off Greg's original script. Wayne added annotations for Python beginners 
-Importing Python packages. Notice that the following packages are required for this operation: sqlite3, simplejson,sqlalchemy 
+This script is taken from curiosity bits http://www.slideshare.net/cosmopolitanvan/five-steps-to-get-tweets-sent-by-a-list-of-users
 """
+# simplejson,sqlalchemy and twython need to be installed separately for this script to work
+
+# ordering imports
+# Standard Library modules
 import sys
 import string
-import simplejson
 import sqlite3
 import time
 import datetime
 from pprint import pprint
+from types import *
+from datetime import datetime, date, time
+
+# External packages
+from twython import Twython
+import simplejson
 import sqlalchemy
 from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, Unicode, Float # importing Unicode is important! If not, you likely encounter data type error.
 from sqlalchemy.ext.declarative import declarative_base
-from types import *
-from datetime import datetime, date, time
-##### FIRST BLOCK OF MODIFIED CODE --> ADDED TO IMPORT TWYTHON AND ADD OAUTH AUTHENTICATION #####
-from twython import Twython
 
 t = Twython(app_key='QLnA03i5k8js1WzUDaIqGFDOr',       #REPLACE 'APP_KEY' WITH YOUR APP KEY, ETC., IN THE NEXT 4 LINES
     app_secret='F5JvaONVQnHYeohwEUQ5i8n99x2HCrE7xl5G2ai3oQ6YNO9Tc4',

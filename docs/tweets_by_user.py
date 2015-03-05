@@ -1,22 +1,26 @@
 """
-This version is based off Greg's original script. Wayne added annotations for Python beginners 
-Importing Python packages. Notice that the following packages are required for this operation: sqlite3, simplejson,sqlalchemy 
+This script is taken from curiosity bits http://www.slideshare.net/cosmopolitanvan/five-steps-to-get-tweets-sent-by-a-list-of-users
 """
+# simplejson,sqlalchemy and twython need to be installed separately for this script to work
+
+# ordering imports
+# Standard Library modules
 import sys
 import string
-import simplejson
 import sqlite3
 import time
 import datetime
 from pprint import pprint
+from types import *
+from datetime import datetime, date, time
+
+# External packages
+from twython import Twython
+import simplejson
 import sqlalchemy
 from sqlalchemy.orm import mapper, sessionmaker
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime, Unicode, Float # importing Unicode is important! If not, you likely encounter data type error.
 from sqlalchemy.ext.declarative import declarative_base
-from types import *
-from datetime import datetime, date, time
-##### FIRST BLOCK OF MODIFIED CODE --> ADDED TO IMPORT TWYTHON AND ADD OAUTH AUTHENTICATION #####
-from twython import Twython
 
 t = Twython(app_key='',       #REPLACE 'APP_KEY' WITH YOUR APP KEY, ETC., IN THE NEXT 4 LINES
     app_secret='',
@@ -140,7 +144,12 @@ class TWEET(Base):
        return "<sender, created_at('%s', '%s')>" % (self.from_user_screen_name,self.created_at)
         
 class ACCOUNT(Base):
-    __tablename__ = 'accounts' # this is the table name for a list of scree names to be mined. You need to go to SQLite Database browser and create a new DB (make sure that DB's name matches the one defined in this script); within that DB, create a table, make sure the table name and field names match the ones defined here. 
+    __tablename__ = 'accounts' 
+    # this is the table name for a list of scree names to be mined. You need to go to SQLite Database browser and create a new DB (make sure that DB's name matches the one defined in this script); within that DB, create a table, make sure the table name and field names match the ones defined here. 
+    # list of scree names to be mined. You need to go to SQLite Database browser and 
+    # create a new DB (make sure that DB's name matches the one defined in this script); 
+    # within that DB, create a table, make sure the table name and field names match the 
+    # ones defined here. 
     rowid = Column(Integer, primary_key=True)     
     screen_name = Column(String)  
     user_type = Column(String) 
@@ -354,7 +363,7 @@ def write_data(self, d, screen_name, user_type):
                 print "Not inserting, dupe.."
 class Scrape:
     def __init__(self):    
-        engine = sqlalchemy.create_engine("sqlite:///testing.sqlite", echo=False)  # different DB name here
+        engine = sqlalchemy.create_engine("sqlite:////Users/Desktop/example.sqlite", echo=False)  # different DB name here
         Session = sessionmaker(bind=engine)
         self.session = Session()  
         Base.metadata.create_all(engine)
