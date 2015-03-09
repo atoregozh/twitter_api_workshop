@@ -6,7 +6,7 @@ Learn basic building blocks of accessing Twitter API and save returned data from
 *Prereqs*  
 1. [Have a text editor] (http://codekitchen.mit.edu/tutorials/text-editors/)  
 2. [Skim this tutorial on basic command line commands] (https://gist.github.com/bengolder/7997954)  
-3. [Have Python 2.7 installed.] (a href="https://www.python.org/download/releases/2.7/)  
+3. [Have Python 2.7 installed.] (a href="https://www.python.org/download/releases/2.7/)
 
 *Workshop Materials*  
 [Access slides here] ("http://web.mit.edu/aizhan/www/twitter_api_workshop/#/). The slides are self-explanatory and are set up such that you can go over them at your own pace without much supervision from anyone. You might encounter some 3rd party bugs along the way or some tough moments if your laptop is running on Windows OS, [read about all of that here] (http://codekitchen.mit.edu/?p=169)
